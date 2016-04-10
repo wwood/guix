@@ -8813,6 +8813,63 @@ development version of CPython that are not available in older releases.")
       (native-inputs
        `(("python2-setuptools" ,python2-setuptools))))))
 
+(define-public python-pytest-pep8
+  (package
+    (name "python-pytest-pep8")
+    (version "1.0.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pytest-pep8" version))
+       (sha256
+        (base32
+         "06032agzhw1i9d9qlhfblnl3dw5hcyxhagn7b120zhrszbjzfbh3"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-before 'build 'remove-failing-test
+           ;; Ignore the known test failure.
+           ;; https://bitbucket.org/pytest-dev/pytest-pep8/issues/8/test-failure
+           (lambda _
+             (substitute* "test_pep8.py"
+               (("^def test_ok_verbose") "def dont_run"))
+             #t))
+         (add-after 'install 'post-install-check
+           ;; 'setup.py test' does not run tests
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((out (assoc-ref outputs "out")))
+               (setenv
+                "PYTHONPATH"
+                (string-append (getenv "PYTHONPATH")":" out "/lib/python"
+                               (string-take (string-take-right
+                                      (assoc-ref inputs "python") 5) 3)
+                               "/site-packages"))
+               (zero?
+                (system*
+                 (string-append out "/bin/py.test") "test_pep8.py"))))))))
+    (propagated-inputs
+     `(("python-pytest-cache", python-pytest-cache)
+       ("python-pytest" ,python-pytest)
+       ("python-pep8" ,python-pep8)))
+    (home-page "https://bitbucket.org/pytest-dev/pytest-pep8")
+    (synopsis "Pytest plugin to check PEP8 requirements")
+    (description
+     "Pytest-pep8 is a py.test plugin for efficiently checking compliance to
+the PEP8 style guide.  If you type @code{py.test --pep8} every file ending in
+@code{.py} will be discovered and PEP8-checked, starting from the command line
+arguments.")
+    (license license:expat)
+    (properties `((python2-variant . ,(delay python2-pytest-pep8))))))
+
+(define-public python2-pytest-pep8
+  (let ((base (package-with-python2
+               (strip-python2-variant python-pytest-pep8))))
+    (package
+      (inherit base)
+      (native-inputs
+       `(("python2-setuptools" ,python2-setuptools))))))
+
 (define-public python-cysignals
   (package
     (name "python-cysignals")
