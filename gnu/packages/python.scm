@@ -8870,6 +8870,51 @@ arguments.")
       (native-inputs
        `(("python2-setuptools" ,python2-setuptools))))))
 
+(define-public python-pytest-flakes
+  (package
+    (name "python-pytest-flakes")
+    (version "1.0.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pytest-flakes" version))
+       (sha256
+        (base32
+         "0flag3n33kbhyjrhzmq990rvg4yb8hhhl0i48q9hw0ll89jp28lw"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-after 'install 'post-install-check
+           ;; 'setup.py test' does not run tests
+           (lambda _
+             (zero? (system* "py.test" "test_flakes.py")))))))
+    (native-inputs
+     `(("python-pytest-pep8" ,python-pytest-pep8)))
+    (propagated-inputs
+     `(("python-pytest-cache" ,python-pytest-cache)
+       ("python-pytest" ,python-pytest)
+       ("python-pyflakes" ,python-pyflakes)))
+    (home-page
+     "https://github.com/fschulze/pytest-flakes")
+    (synopsis "Pytest plugin to check source code with pyflakes")
+    (description
+     "Pytest-pyflakes is a py.test plugin for efficiently checking python source
+with pyflakes.  If you type @code{py.test --flakes} every file ending in
+@code{.py} will be discovered and run through pyflakes, starting from the
+command line arguments.")
+    (license license:expat)
+    (properties `((python2-variant . ,(delay python2-pytest-flakes))))))
+
+(define-public python2-pytest-flakes
+  (let ((base (package-with-python2
+                 (strip-python2-variant python-pytest-flakes))))
+    (package
+      (inherit base)
+      (native-inputs
+       `(,@(package-native-inputs base)
+         ("python2-setuptools" ,python2-setuptools))))))
+
 (define-public python-cysignals
   (package
     (name "python-cysignals")
