@@ -8945,6 +8945,37 @@ to support both Python 2 and Python 3 with minimal overhead.")
       (inherit base)
       (native-inputs `(("python2-setuptools" ,python2-setuptools))))))
 
+(define-public python-cachecontrol
+  (package
+    (name "python-cachecontrol")
+    (version "0.11.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "CacheControl" version))
+       (sha256
+        (base32
+         "15bn8xll6z15h0zqhfjy1n8dn8p0fcb4m0rhnfanq63z7r2wpprp"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-requests" ,python-requests)
+       ("python-lockfile" ,python-lockfile)))
+    (home-page "https://github.com/ionrock/cachecontrol")
+    (synopsis "httplib2 caching for requests")
+    (description "CacheControl is a port of the caching algorithms in httplib2
+for use with requests session object.  It was written because httplib2's
+better support for caching is often mitigated by its lack of threadsafety.
+The same is true of requests in terms of caching.")
+    (license asl2.0)
+    (properties `((python2-variant . ,(delay python2-cachecontrol))))))
+
+(define-public python2-cachecontrol
+  (let ((base (package-with-python2
+               (strip-python2-variant python-cachecontrol))))
+    (package
+      (inherit base)
+      (native-inputs `(("python2-setuptools" ,python2-setuptools))))))
+
 (define-public python-cysignals
   (package
     (name "python-cysignals")
