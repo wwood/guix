@@ -8908,12 +8908,42 @@ command line arguments.")
 
 (define-public python2-pytest-flakes
   (let ((base (package-with-python2
-                 (strip-python2-variant python-pytest-flakes))))
+               (strip-python2-variant python-pytest-flakes))))
     (package
       (inherit base)
       (native-inputs
        `(,@(package-native-inputs base)
          ("python2-setuptools" ,python2-setuptools))))))
+
+(define-public python-future
+  (package
+    (name "python-future")
+    (version "0.15.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "future" version))
+       (sha256
+        (base32
+         "15wvcfzssc68xqnqi1dq4fhd0848hwi9jn42hxyvlqna40zijfrx"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f)) ; Tests connect to the network
+    (home-page "http://python-future.org")
+    (synopsis "Single-source support for Python 3 and 2")
+    (description
+     "@code{python-future} is the missing compatibility layer between Python 2 and
+Python 3.  It allows you to use a single, clean Python 3.x-compatible codebase
+to support both Python 2 and Python 3 with minimal overhead.")
+    (license license:expat)
+    (properties `((python2-variant . ,(delay python2-future))))))
+
+(define-public python2-future
+  (let ((base (package-with-python2
+               (strip-python2-variant python-future))))
+    (package
+      (inherit base)
+      (native-inputs `(("python2-setuptools" ,python2-setuptools))))))
 
 (define-public python-cysignals
   (package
