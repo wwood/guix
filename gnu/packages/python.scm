@@ -8968,6 +8968,47 @@ The same is true of requests in terms of caching.")
       (inherit base)
       (native-inputs `(("python2-setuptools" ,python2-setuptools))))))
 
+(define-public python-natsort
+  (package
+    (name "python-natsort")
+    (version "4.0.4")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "natsort" version))
+       (sha256
+        (base32
+         "0f8q66pyczgy1cm3nh8rkh7hgl9h49zx9r06mivg4y5sbzla6sy7"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-pytest" ,python-pytest)
+       ("python-pytest-flakes" ,python-pytest-flakes)
+       ("python-pytest-cov" ,python-pytest-cov)
+       ("python-pytest-cache" ,python-pytest-cache)
+       ("python-hypothesis" ,python-hypothesis)
+       ("python-pytest-pep8", python-pytest-pep8)))
+    (home-page "https://github.com/SethMMorton/natsort")
+    (synopsis "Sort lists naturally")
+    (description "When you try to sort a list of strings that contain numbers,
+the normal python sort algorithm sorts lexicographically, so you might not get
+the results that you expect.  @code{natsort} provides a function
+@code{natsorted} that helps sort lists 'naturally', either as real
+numbers (i.e. signed/unsigned floats or ints), or as versions.")
+    (license license:expat)
+    (properties `((python2-variant . ,(delay python2-natsort))))))
+
+(define-public python2-natsort
+  (let ((base (package-with-python2
+               (strip-python2-variant python-natsort))))
+    (package
+      (inherit base)
+      (native-inputs
+       (append (package-native-inputs base)
+               `(("python2-mock" ,python2-mock)
+                 ("python2-pathlib" ,python2-pathlib)
+                 ("python2-enum34" ,python2-enum34)
+                 ("python2-setuptools" ,python2-setuptools)))))))
+
 (define-public python-cysignals
   (package
     (name "python-cysignals")
