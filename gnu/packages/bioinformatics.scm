@@ -3359,6 +3359,78 @@ optimize the sequencing depth, or to screen multiple libraries to avoid low
 complexity samples.")
     (license license:gpl3+)))
 
+(define-public python-scikit-bio
+  (package
+    (name "python-scikit-bio")
+    (version "0.5.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "https://pypi.python.org/packages/"
+             "95/60/f4c269a6dfaf9d027adba6a81497e5d238cf5e604f53206b4ea50ed1145f"
+             "/scikit-bio-" version ".zip"))
+      (sha256
+        (base32
+          "0fmamwbf6gz7lczp67a7ilan530gsw3nnmyi83rzv1kvhbfr88a8"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         ;; Install procedure installs extraneous binaries.
+         (add-after 'install 'remove-extraneous-files
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let* ((out (assoc-ref outputs "out"))
+                    (bin (string-append out "/bin")))
+               (delete-file-recursively bin))
+             #t))
+         ;; It is simpler to run the tests after installation.
+         (delete 'check)
+         (add-after 'install 'check-after-install
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (setenv "PYTHONPATH"
+                     (string-append
+                      (getenv "PYTHONPATH")
+                      ":" (assoc-ref outputs "out")
+                      "/lib/python"
+                      (string-take (string-take-right
+                                    (assoc-ref inputs "python") 5) 3)
+                      "/site-packages"))
+             (zero?
+              (with-directory-excursion "ci"
+                (system*
+                 "python"
+                 "-m"
+                 "skbio.test"))))))))
+;                 "-c"
+;                 (string-append "import matplotlib; "
+;                                "matplotlib.use(\"Agg\"); "
+;                                "import skbio")))))))))
+    (native-inputs
+     `(("unzip" ,unzip)
+       ("python-nose" ,python-nose)
+       ("python-pep8" ,python-pep8)
+       ("python-flake8" ,python-flake8)
+       ("python-dateutil" ,python-dateutil-2)))
+    (inputs
+     `(("python-lockfile" ,python-lockfile)
+       ("python-cachecontrol" ,python-cachecontrol)
+       ("python-decorator" ,python-decorator)
+       ("python-ipython" ,python-ipython)
+       ("python-matplotlib" ,python-matplotlib)
+       ("python-natsort" ,python-natsort)
+       ("python-numpy" ,python-numpy)
+       ("python-pandas" ,python-pandas)
+       ("python-scipy" ,python-scipy)))
+    (home-page "http://scikit-bio.org")
+    (synopsis "Resources for bioinformatics")
+    (description
+     "Scikit-bio is a library for working with biological data in Python,
+providing data structures, algorithms and educational resources.  It defines
+Python packages for biological sequences, alignments, tree, visualisation,
+diversity calculation and file I/O.")
+    (license license:bsd-3)))
+
 (define-public sra-tools
   (package
     (name "sra-tools")
