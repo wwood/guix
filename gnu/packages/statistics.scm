@@ -205,6 +205,29 @@ publication-quality data plots.  A large amount of 3rd-party packages are
 available, greatly increasing its breadth and scope.")
     (license license:gpl3+)))
 
+(define-public r-bit
+  (package
+    (name "r-bit")
+    (version "1.1-12")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "bit" version))
+       (sha256
+        (base32
+         "0a6ig6nnjzq80r2ll4hc74za3xwzbzig6wlyb4dby0knzf3iqa6f"))))
+    (build-system r-build-system)
+    (home-page "http://ff.r-forge.r-project.org")
+    (synopsis "A class for vectors of 1-bit booleans")
+    (description
+     "This package provides bitmapped vectors of booleans (no NAs), coercion
+from and to logicals, integers and integer subscripts; fast boolean operators
+and fast summary statistics.  With 'bit' vectors you can store true binary
+booleans {FALSE,TRUE} at the expense of 1 bit only, on a 32 bit architecture
+this means factor 32 less RAM and ~ factor 32 more speed on boolean
+operations.")
+    (license license:gpl2)))
+
 (define-public r-colorspace
   (package
     (name "r-colorspace")
