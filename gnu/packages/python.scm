@@ -108,7 +108,6 @@
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages tex)
   #:use-module (gnu packages texinfo)
-  #:use-module (gnu packages time)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages video)
@@ -12013,42 +12012,6 @@ mocks, stubs and fakes.")
 
 (define-public python2-flexmock
   (package-with-python2 python-flexmock))
-
-(define-public python-orator
-  (package
-    (name "python-orator")
-    (version "0.9.7")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "orator" version))
-              (sha256
-               (base32
-                "14r58z64fdp76ixnvmi4lni762b405ynmsx6chr1qihs3yl9zn6c"))))
-    (build-system python-build-system)
-    (arguments '(#:tests? #f)) ; no tests
-    (propagated-inputs
-     `(("python-backpack" ,python-backpack)
-       ("python-blinker" ,python-blinker)
-       ("python-cleo" ,python-cleo)
-       ("python-faker" ,python-faker)
-       ("python-inflection" ,python-inflection)
-       ("python-lazy-object-proxy" ,python-lazy-object-proxy)
-       ("python-pendulum" ,python-pendulum)
-       ("python-pyaml" ,python-pyaml)
-       ("python-pygments" ,python-pygments)
-       ("python-simplejson" ,python-simplejson)
-       ("python-six" ,python-six)
-       ("python-wrapt" ,python-wrapt)))
-    (home-page "https://orator-orm.com/")
-    (synopsis "ActiveRecord ORM for Python")
-    (description
-     "Orator provides a simple ActiveRecord-like Object Relational Mapping
-implementation for Python.")
-    (license license:expat)
-    (properties `((python2-variant . ,(delay python2-orator))))))
-
-(define-public python2-orator
-  (package-with-python2 (strip-python2-variant python-orator)))
 
 (define-public python-prompt-toolkit
  (package
