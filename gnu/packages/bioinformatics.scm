@@ -765,6 +765,28 @@ into separate processes; and more.")
 (define-public python2-biopython
   (package-with-python2 python-biopython))
 
+(define-public python-fastalite
+  (package
+    (name "python-fastalite")
+    (version "0.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "fastalite" version))
+       (sha256
+        (base32
+         "1qli6pxp77i9xn2wfciq2zaxhl82bdxb33cpzqzj1z25yd036wqj"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f)) ; Test data is not distributed.
+    (home-page
+     "https://github.com/nhoffman/fastalite")
+    (synopsis "Simplest possible fasta parser")
+    (description "Simplest possible fasta parser")
+    (license license:expat)))
+
+(define-public python2-fastalite
+  (package-with-python2 python-fastalite))
 (define-public bpp-core
   ;; The last release was in 2014 and the recommended way to install from source
   ;; is to clone the git repository, so we do this.
@@ -1938,15 +1960,16 @@ accessing bigWig files.")
 (define-public python-dendropy
   (package
     (name "python-dendropy")
-    (version "4.2.0")
+    (version "4.4.0")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "DendroPy" version))
        (sha256
         (base32
-         "15c7s3d5gf19ljsxvq5advaa752wfi7pwrdjyhzmg85hccyvp47p"))
-       (patches (search-patches "python-dendropy-fix-tests.patch"))))
+         "173ryan25n5590ahqhq2sripz2vpawnk748pdhyj3vdkg37f587h"))
+       ;(patches (search-patches "python-dendropy-fix-tests.patch"))
+       ))
     (build-system python-build-system)
     (home-page "http://packages.python.org/DendroPy/")
     (synopsis "Library for phylogenetics and phylogenetic computing")
@@ -6019,7 +6042,13 @@ Cuffdiff or Ballgown programs.")
      `(("python-sqlalchemy" ,python2-sqlalchemy)
        ("python-decorator" ,python2-decorator)
        ("python-biopython" ,python2-biopython)
-       ("python-pandas" ,python2-pandas)))
+       ("python-pandas" ,python2-pandas)
+       ("python-psycopg2" ,python2-psycopg2)
+       ("python-fastalite" ,python2-fastalite)
+       ("python-pyyaml" ,python2-pyyaml)
+       ("python-six" ,python2-six)
+       ("python-jinja2" ,python2-jinja2)
+       ("python-dendropy" ,python2-dendropy)))
     (home-page "https://github.com/fhcrc/taxtastic")
     (synopsis "Tools for taxonomic naming and annotation")
     (description
