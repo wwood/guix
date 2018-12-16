@@ -2582,7 +2582,7 @@ accurately delineate genomic rearrangements throughout the genome.")
 (define-public diamond
   (package
     (name "diamond")
-    (version "0.9.22")
+    (version "0.9.23")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -2591,7 +2591,7 @@ accurately delineate genomic rearrangements throughout the genome.")
               (file-name (git-file-name name version))
               (sha256
                (base32
-                "0bky78v79g3wmdpsd706cscckgw1v09fg8vdd0z8z0d5b97aj9zl"))))
+                "0zdgbqjd109ghj79xkb4p3c8fizpc1liv289cdn9ppsgain9jcvs"))))
     (build-system cmake-build-system)
     (arguments
      '(#:tests? #f ; no "check" target
@@ -2611,7 +2611,7 @@ translated DNA query sequences against a protein reference database (BLASTP
 and BLASTX alignment mode).  The speedup over BLAST is up to 20,000 on short
 reads at a typical sensitivity of 90-99% relative to BLAST depending on the
 data and settings.")
-    (license license:agpl3+)))
+    (license license:gpl3+)))
 
 (define-public discrover
   (package
