@@ -861,10 +861,12 @@ rendering SVG graphics.")
         (base32
          "1hqbm934n5yjwn31aq8h7shrr0rcy326wrqfc856vyn0gr0sy21i"))))
     (build-system python-build-system)
+    (arguments
+     `(#:tests? #f))
     (native-inputs
      `(("python-pytest" ,python-pytest)))
     (home-page "https://github.com/sdispater/pastel")
-    (synopsis "Library to colorize strings in your terminal")
+    (synopsis "A Library to colorize strings in your terminal")
     (description "Pastel is a simple library to help you colorize strings in
 your terminal.  It comes bundled with predefined styles:
 @enumerate
